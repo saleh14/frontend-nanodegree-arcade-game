@@ -21,11 +21,11 @@ Player.prototype.handleInput = function (k) {
 
     if (k === 'left' && this.x > 0)
         this.x -= 98 / 2;
-    if (k === 'right' && this.x < width)
+    else if (k === 'right' && this.x < width)
         this.x += 98 / 2;
-    if (k === 'up' && this.y > 0)
+    else if (k === 'up' && this.y > 0)
         this.y -= 82;
-    if (k === 'down' && this.y < height)
+    else if (k === 'down' && this.y < height)
         this.y += 82;
 
 };
@@ -43,19 +43,6 @@ var Enemy = function (x,y,sp) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 };
-
-var nextEnemyIsReady = false,
-    enemiesY = [62,145,225];
-allEnemies = [new Enemy(-300,62,2)],
-player = new Player();
-player.init();
-(function nextEnemy() {
-    var ran = Math.random() + 1,
-        period = ran * 1000;
-    nextEnemyIsReady = true;
-    return setTimeout(nextEnemy, period);
-
-})();
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -81,6 +68,24 @@ Enemy.prototype.render = function () {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
+function initEnemies() {
+    allEnemies = [new Enemy(-300,62,2)],
+    nextEnemy();
+}
+function nextEnemy() {
+    var ran = Math.random() + 1,
+        period = ran * 1000;
+    nextEnemyIsReady = true;
+    return setTimeout(nextEnemy, period);
+
+};
+
+var nextEnemyIsReady = false,
+    enemiesY = [62,145,225];
+player = new Player();
+player.init();
+initEnemies();
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
