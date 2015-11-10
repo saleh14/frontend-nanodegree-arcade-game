@@ -1,15 +1,34 @@
-var Player = function() {
-    this.x =0;
-    this.y = 0;
-}
+var Player = function () {
+};
 
-Player.prototype.update = function() {
-    
-}
+Player.prototype.init = function () {
+    this.x = 203;
+    this.y = 311;
+    this.sprite = 'images/char-boy.png';
+};
 
-Player.prototype.render = function() {
-    
-}
+Player.prototype.update = function () {
+
+};
+
+Player.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function (k) {
+    var width = ctx.canvas.width,
+        height = ctx.canvas.height;
+
+    if (k === 'left' && this.x > 0)
+        this.x -= 98 / 2;
+    if (k === 'right' && this.x < width)
+        this.x += 98 / 2;
+    if (k === 'up' && this.y > 0)
+        this.y -= 82;
+    if (k === 'down' && this.y < height)
+        this.y += 82;
+
+};
 
 // Enemies our player must avoid
 var Enemy = function (x,y,sp) {
@@ -26,15 +45,16 @@ var Enemy = function (x,y,sp) {
 };
 
 var nextEnemyIsReady = false,
-    enemiesY = [62,145,225]
-    allEnemies = [new Enemy(-300,62,2)],
-    player = new Player();
+    enemiesY = [62,145,225];
+allEnemies = [new Enemy(-300,62,2)],
+player = new Player();
+player.init();
 (function nextEnemy() {
-   var ran = Math.random()+1,
-       period = ran* 1000;
-   nextEnemyIsReady = true;
-   return setTimeout( nextEnemy, period);
-        
+    var ran = Math.random() + 1,
+        period = ran * 1000;
+    nextEnemyIsReady = true;
+    return setTimeout(nextEnemy, period);
+
 })();
 
 // Update the enemy's position, required method for game
@@ -44,10 +64,10 @@ Enemy.prototype.update = function (dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    if(nextEnemyIsReady){
+    if (nextEnemyIsReady){
         nextEnemyIsReady = false;
-       var ran = Math.floor(Math.random()*3);
-       allEnemies.push(new Enemy(-300,enemiesY[ran],2));
+        var ran = Math.floor(Math.random() * 3);
+        allEnemies.push(new Enemy(-300,enemiesY[ran],2));
     }
 
     this.x += this.speed;
@@ -76,5 +96,5 @@ document.addEventListener('keyup', function (e) {
         40: 'down'
     };
 
-    //player.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
