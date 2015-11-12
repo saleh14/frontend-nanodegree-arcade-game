@@ -8,14 +8,15 @@ Player.prototype.init = function () {
 };
 
 Player.prototype.update = function () {
+
     var currentEnemies = allEnemies.slice(-4);
     var self = this;
     currentEnemies.forEach(function(enemy) {
-        if (Math.abs(self.x - enemy.x) < 70) 
-                && Math.abs(self.y - enemy.y) < 70 )
-            init();
-        }
-    }
+        if (Math.abs(self.x - enemy.x) < 70 && 
+                Math.abs(self.y - enemy.y) < 70 )
+            resetGame();
+        
+    });
 
 };
 
@@ -58,7 +59,20 @@ Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    if (nextEnemyIsReady){
+        nextEnemyIsReady = false;
+        var ran = Math.floor(Math.random() * 3);
+        allEnemies.push(new Enemy(-300,enemiesY[ran],2));
+    }
+
+    this.x += this.speed;
 }
+
+Enemy.prototype.render = function () {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 function init(global) {
     global.allEnemies = [new Enemy(-300,62,2)],
     global.nextEnemyIsReady = false,
@@ -70,10 +84,15 @@ function init(global) {
 
 function nextEnemy() {
     var ran = Math.random() + 1,
-        period = ran * 1100;
+        period = ran * 1300;
     nextEnemyIsReady = true;
     return setTimeout(nextEnemy, period);
 };
+
+var  resetGame = function() {
+    player.init();
+    allEnemies = [new Enemy(-300,62,2)];
+}
 
 init(this);
 
